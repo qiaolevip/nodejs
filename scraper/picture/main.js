@@ -8,7 +8,7 @@ var index = 1,
 patchPreImg(0);
 
 function patchPreImg(pn) {
-  var tag1 = '摄影', tag2 = '国家地理',
+  var tag1 = '摄影', tag2 = '风景',
     url = 'http://image.baidu.com/data/imgs?pn=%s&rn=%s&p=channel&from=1&col=%s&tag=%s&sort=1&tag3=',
     url = util.format(url, pn, rn, tag1, tag2),
     url = encodeURI(url),
@@ -26,7 +26,9 @@ function patchPreImg(pn) {
           if (desc.length > 25) desc = desc.substr(0, 25) + '...';
           desc += '(' + img.id + ')';
           var downloadUrl = img.downloadUrl || img.objUrl;
-          downloadImg(downloadUrl, dir, desc);
+          (function(url, dir, desc) {
+            downloadImg(url, dir, desc);
+          })(downloadUrl, dir, desc);
         }
       });
     }
@@ -42,8 +44,8 @@ function mkdirSync(dir) {
   return dir;
 }
 
-function replaceIllegalChars(name) {
-  return name.replace(/[\\/:*?"<>|]/g, '');
+function replaceIllegalChars(str) {
+  return str.replace(/[\\/:*?"<>|\n]/g, '');
 }
 
 function downloadImg(url, dir, desc) {
